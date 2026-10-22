@@ -1,5 +1,7 @@
 name: Build APK
 on: [push, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,3 +21,9 @@ jobs:
         with:
           name: CarMirror-debug-apk
           path: CarMirror/app/build/outputs/apk/debug/*.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Car Mirror build ${{ github.run_number }}
+          make_latest: true
+          files: CarMirror/app/build/outputs/apk/debug/*.apk
