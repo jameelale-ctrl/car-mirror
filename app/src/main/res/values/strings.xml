@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Car Mirror</string>
+    <string name="touch_service_label">Car Mirror tap control</string>
+    <string name="touch_service_description">Lets taps on the car screen control your phone while Car Mirror is showing your screen. It only performs taps and swipes; it does not read screen content.</string>
+</resources>

@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APKs
 on: [push, workflow_dispatch]
 permissions:
   contents: write
@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -q CarMirror.zip
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -15,15 +14,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.10.2"
-      - run: gradle :app:assembleDebug
-        working-directory: CarMirror
+      - run: gradle :app:assembleDebug :photos:assembleDebug
+      - name: Collect APKs
+        run: |
+          mkdir out
+          cp app/build/outputs/apk/debug/app-debug.apk out/CarMirror.apk
+          cp photos/build/outputs/apk/debug/photos-debug.apk out/CarPhotos.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: CarMirror-debug-apk
-          path: CarMirror/app/build/outputs/apk/debug/*.apk
+          name: apks
+          path: out/*.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
-          name: Car Mirror build ${{ github.run_number }}
+          name: Car apps build ${{ github.run_number }}
           make_latest: true
-          files: CarMirror/app/build/outputs/apk/debug/*.apk
+          files: out/*.apk
